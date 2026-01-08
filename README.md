@@ -6,6 +6,13 @@ Your accounts manager
 
 The name *xitter* is inspired by a combination of the names Nitter and X.
 
+## Screenshots
+
+![xitter main page](assets/xitterprint1.png)
+![xitter add  account](assets/xitterprint2.png)
+![xitter remove account](assets/xitterprint3.png)
+![xitter feed](assets/xitterprint4.png)
+
 ## Installation
 
 ### 1. Clone the repository
