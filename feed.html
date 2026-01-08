@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xitter</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #1e1e2e;
+        color: #cdd6f4;
+        min-height: 100vh;
+        padding: 40px 20px;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .back {
+        color: #6c7086;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 30px;
+    }
+
+    .back:hover {
+        color: #89b4fa;
+    }
+
+    h1 {
+        color: #89b4fa;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    h1::before {
+        content: "@";
+    }
+
+    .subtitle {
+        color: #6c7086;
+        margin-bottom: 30px;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        background: #313244;
+        border-radius: 12px;
+        color: #cdd6f4;
+        text-decoration: none;
+        border: 2px solid transparent;
+        transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+        background: #45475a;
+        border-color: #89b4fa;
+        transform: translateX(5px);
+    }
+
+    .btn-primary {
+        background: #89b4fa;
+        color: #1e1e2e;
+        font-weight: 600;
+    }
+
+    .btn-primary:hover {
+        background: #a6c8ff;
+    }
+
+    .btn-label {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-title {
+        font-size: 1.1em;
+    }
+
+    .btn-desc {
+        font-size: 0.85em;
+        opacity: 0.7;
+    }
+
+    .arrow {
+        font-size: 1.5em;
+    }
+</style>
+</head>
+
+<body>
+<div class="container">
+    <a href="index.html" class="back">← back</a>
+
+    <h1 id="user"></h1>
+    <p class="subtitle">choose an option</p>
+
+    <div class="buttons">
+        <a id="nitter-main" class="btn btn-primary" target="_blank">
+            <div class="btn-label">
+                <div class="btn-title">nitter (recommended)</div>
+                <div class="btn-desc">no ads, chronological</div>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a id="nitter-1" class="btn" target="_blank">
+            <div class="btn-label">
+                <div class="btn-title">instance 1</div>
+                <div class="btn-desc">nitter.poast</div>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a id="nitter-2" class="btn" target="_blank">
+            <div class="btn-label">
+                <div class="btn-title">instance 2</div>
+                <div class="btn-desc">nitter.privacyredirect</div>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a id="twitter" class="btn" target="_blank">
+            <div class="btn-label">
+                <div class="btn-title">twitter</div>
+                <div class="btn-desc">login required</div>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+    </div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const user = params.get("u");
+
+if (!user) {
+    document.body.innerHTML = "<p>usuário inválido</p>";
+} else {
+    document.getElementById("user").textContent = user;
+
+    document.getElementById("nitter-main").href =
+        `https://nitter.net/${user}`;
+
+    document.getElementById("nitter-1").href =
+        `https://nitter.poast.org/${user}`;
+
+    document.getElementById("nitter-2").href =
+        `https://nitter.privacyredirect.com/${user}`;
+
+    document.getElementById("twitter").href =
+        `https://twitter.com/${user}`;
+}
+</script>
+</body>
+</html>

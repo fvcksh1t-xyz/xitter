@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xitter</title>
+
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #1e1e2e;
+        color: #cdd6f4;
+        min-height: 100vh;
+        padding: 40px 20px;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        color: #89b4fa;
+        font-size: 3em;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .subtitle {
+        color: #6c7086;
+        margin-bottom: 30px;
+        font-size: 1.1em;
+    }
+
+    .flash-messages {
+        margin-bottom: 20px;
+    }
+
+    .flash {
+        padding: 14px 18px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .flash.success {
+        background: #a6e3a1;
+        color: #1e1e2e;
+    }
+
+    .flash.error {
+        background: #f38ba8;
+        color: #1e1e2e;
+    }
+
+    .flash.warning {
+        background: #f9e2af;
+        color: #1e1e2e;
+    }
+
+    .add-form {
+        background: #313244;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        border: 2px solid #45475a;
+    }
+
+    .form-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .input-wrapper {
+        flex: 1;
+        position: relative;
+    }
+
+    .at-symbol {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #89b4fa;
+        font-size: 1.2em;
+        pointer-events: none;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 14px 14px 14px 36px;
+        background: #1e1e2e;
+        border: 2px solid #45475a;
+        border-radius: 8px;
+        color: #cdd6f4;
+        font-size: 1em;
+    }
+
+    input[type="text"]:focus {
+        outline: none;
+        border-color: #89b4fa;
+    }
+
+    input::placeholder {
+        color: #6c7086;
+    }
+
+    .btn-add {
+        padding: 14px 24px;
+        background: #89b4fa;
+        color: #1e1e2e;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-add:hover {
+        background: #a6c8ff;
+    }
+
+    .contas-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .conta-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px;
+        background: #313244;
+        border-radius: 12px;
+        border: 2px solid transparent;
+    }
+
+    .conta-item:hover {
+        background: #45475a;
+        border-color: #89b4fa;
+    }
+
+    .conta-link {
+        flex: 1;
+        color: #cdd6f4;
+        text-decoration: none;
+        font-size: 1.1em;
+    }
+
+    .conta-link::before {
+        content: "@";
+        color: #89b4fa;
+        margin-right: 4px;
+    }
+
+    .btn-remove {
+        padding: 6px 12px;
+        background: #f38ba8;
+        color: #1e1e2e;
+        border-radius: 6px;
+        font-size: 0.85em;
+        cursor: pointer;
+        font-weight: 600;
+        border: none;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c7086;
+    }
+
+    .empty-state-icon {
+        font-size: 3em;
+        margin-bottom: 16px;
+    }
+</style>
+</head>
+
+<body>
+<div class="container">
+    <h1>xitter</h1>
+    <p class="subtitle">your favorite accounts</p>
+
+    <div class="flash-messages" id="flash"></div>
+
+    <div class="add-form">
+        <div class="form-group">
+            <div class="input-wrapper">
+                <span class="at-symbol">@</span>
+                <input id="username" type="text" placeholder="username">
+            </div>
+            <button class="btn-add" onclick="addConta()">add account</button>
+        </div>
+    </div>
+
+    <ul class="contas-list" id="lista"></ul>
+
+    <div class="empty-state" id="empty" hidden>
+        <div class="empty-state-icon">📭</div>
+        <p>no accounts added yet.</p>
+    </div>
+</div>
+
+<script>
+const KEY = "xitter-contas";
+
+function getContas() {
+    return JSON.parse(localStorage.getItem(KEY) || "[]");
+}
+
+function saveContas(c) {
+    localStorage.setItem(KEY, JSON.stringify(c));
+}
+
+function flash(msg, type) {
+    const box = document.getElementById("flash");
+    box.innerHTML = `<div class="flash ${type}">${msg}</div>`;
+    setTimeout(() => box.innerHTML = "", 2500);
+}
+
+function render() {
+    const lista = document.getElementById("lista");
+    const empty = document.getElementById("empty");
+    lista.innerHTML = "";
+
+    const contas = getContas();
+    empty.hidden = contas.length !== 0;
+
+    contas.forEach(user => {
+        const li = document.createElement("li");
+        li.className = "conta-item";
+        li.innerHTML = `
+            <a class="conta-link" href="feed.html?u=${encodeURIComponent(user)}">${user}</a>
+            <button class="btn-remove" onclick="removeConta('${user}')">×</button>
+        `;
+        lista.appendChild(li);
+    });
+}
+
+function addConta() {
+    let user = username.value.trim();
+    if (user.startsWith("@")) user = user.slice(1);
+    if (!user) return flash("enter a username!", "error");
+
+    const contas = getContas();
+    if (contas.includes(user))
+        return flash(`@${user} it's already on the list.!`, "warning");
+
+    contas.push(user);
+    saveContas(contas);
+    flash(`@${user} added successfully!`, "success");
+    username.value = "";
+    render();
+}
+
+function removeConta(user) {
+    saveContas(getContas().filter(u => u !== user));
+    flash(`@${user} removed!`, "success");
+    render();
+}
+
+render();
+</script>
+</body>
+</html>
