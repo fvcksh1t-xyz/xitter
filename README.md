@@ -1,6 +1,10 @@
-# Xitter
+# xitter
 
 Your accounts manager
+
+## Why "xitter"?
+
+The name *xitter* is inspired by a combination of the names Nitter and X.
 
 ## Installation
 
